@@ -1,5 +1,5 @@
 import { o as __toESM } from "../_runtime.mjs";
-import { n as require_react } from "./@radix-ui/react-compose-refs+[...].mjs";
+import { u as require_react } from "./@floating-ui/react-dom+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -182,6 +182,34 @@ var Building2 = createLucideIcon("building-2", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Calendar = createLucideIcon("calendar", [
+	["path", {
+		d: "M8 2v4",
+		key: "1cmpym"
+	}],
+	["path", {
+		d: "M16 2v4",
+		key: "4m81vk"
+	}],
+	["rect", {
+		width: "18",
+		height: "18",
+		x: "3",
+		y: "4",
+		rx: "2",
+		key: "1hopcy"
+	}],
+	["path", {
+		d: "M3 10h18",
+		key: "8toen8"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var ChartColumn = createLucideIcon("chart-column", [
 	["path", {
 		d: "M3 3v16a2 2 0 0 0 2 2h16",
@@ -219,6 +247,16 @@ var Check = createLucideIcon("check", [["path", {
 var ChevronDown = createLucideIcon("chevron-down", [["path", {
 	d: "m6 9 6 6 6-6",
 	key: "qrunsl"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var ChevronLeft = createLucideIcon("chevron-left", [["path", {
+	d: "m15 18-6-6 6-6",
+	key: "1wnfg3"
 }]]);
 /**
 * @license lucide-react v0.575.0 - ISC
@@ -925,4 +963,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { Download as A, BookOpen as B, LogIn as C, FileText as D, Landmark as E, ChevronRight as F, ArrowDownLeft as H, ChevronDown as I, Check as L, ClipboardCheck as M, CircleDollarSign as N, FileCheckCorner as O, CircleCheck as P, ChartColumn as R, LogOut as S, LayoutDashboard as T, Bell as V, Plus as _, UserPlus as a, Menu as b, ShoppingCart as c, Settings as d, Send as f, Printer as g, Receipt as h, User as i, Clock3 as j, Ellipsis as k, ShieldCheck as l, Save as m, Wallet as n, Truck as o, Search as p, Users as r, Trash2 as s, X as t, ShieldAlert as u, Phone as v, Lock as w, Mail as x, Pen as y, Building2 as z };
+export { Download as A, Calendar as B, LogIn as C, FileText as D, Landmark as E, ChevronRight as F, BookOpen as H, ChevronLeft as I, ChevronDown as L, ClipboardCheck as M, CircleDollarSign as N, FileCheckCorner as O, CircleCheck as P, Check as R, LogOut as S, LayoutDashboard as T, Bell as U, Building2 as V, ArrowDownLeft as W, Plus as _, UserPlus as a, Menu as b, ShoppingCart as c, Settings as d, Send as f, Printer as g, Receipt as h, User as i, Clock3 as j, Ellipsis as k, ShieldCheck as l, Save as m, Wallet as n, Truck as o, Search as p, Users as r, Trash2 as s, X as t, ShieldAlert as u, Phone as v, Lock as w, Mail as x, Pen as y, ChartColumn as z };

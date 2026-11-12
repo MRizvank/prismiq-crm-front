@@ -1,11 +1,14 @@
 import { o as __toESM } from "../_runtime.mjs";
-import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
-import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
-import { A as Download, B as BookOpen, C as LogIn, D as FileText, E as Landmark, F as ChevronRight, H as ArrowDownLeft, I as ChevronDown, L as Check, M as ClipboardCheck, N as CircleDollarSign, O as FileCheckCorner, P as CircleCheck, R as ChartColumn, S as LogOut, T as LayoutDashboard, V as Bell, _ as Plus, a as UserPlus, b as Menu, c as ShoppingCart, d as Settings, f as Send, g as Printer, h as Receipt, i as User, j as Clock3, k as Ellipsis, l as ShieldCheck, m as Save, n as Wallet, o as Truck, p as Search, r as Users, s as Trash2, t as X, u as ShieldAlert, v as Phone, w as Lock, x as Mail, y as Pen, z as Building2 } from "../_libs/lucide-react.mjs";
-import { t as Slot } from "../_libs/radix-ui__react-slot.mjs";
+import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
+import { n as require_jsx_runtime } from "../_libs/radix-ui__react-context+react.mjs";
+import { A as Download, B as Calendar, C as LogIn, D as FileText, E as Landmark, F as ChevronRight, H as BookOpen, I as ChevronLeft, L as ChevronDown, M as ClipboardCheck, N as CircleDollarSign, O as FileCheckCorner, P as CircleCheck, R as Check, S as LogOut, T as LayoutDashboard, U as Bell, V as Building2, W as ArrowDownLeft, _ as Plus, a as UserPlus, b as Menu, c as ShoppingCart, d as Settings, f as Send, g as Printer, h as Receipt, i as User, j as Clock3, k as Ellipsis, l as ShieldCheck, m as Save, n as Wallet, o as Truck, p as Search, r as Users, s as Trash2, t as X, u as ShieldAlert, v as Phone, w as Lock, x as Mail, y as Pen, z as ChartColumn } from "../_libs/lucide-react.mjs";
+import { i as Slot } from "../_libs/@radix-ui/react-dismissable-layer+[...].mjs";
 import { n as clsx, t as cva } from "../_libs/class-variance-authority+clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-DsipdM6Z.js
+import { P as addDays, S as isValid, l as format } from "../_libs/date-fns.mjs";
+import { n as getDefaultClassNames, t as DayPicker } from "../_libs/react-day-picker.mjs";
+import { i as Trigger, n as Portal, r as Root2, t as Content2 } from "../_libs/@radix-ui/react-popover+[...].mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CTvPYp2R.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -41,6 +44,111 @@ var Button = (0, import_react.forwardRef)(({ className, variant, size, asChild, 
 	});
 });
 Button.displayName = "Button";
+function Calendar$1({ className, classNames, showOutsideDays = true, captionLayout = "label", buttonVariant = "ghost", formatters, components, ...props }) {
+	const defaultClassNames = getDefaultClassNames();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DayPicker, {
+		showOutsideDays,
+		className: cn("bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`, String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`, className),
+		captionLayout,
+		formatters: {
+			formatMonthDropdown: (date) => date.toLocaleString("default", { month: "short" }),
+			...formatters
+		},
+		classNames: {
+			root: cn("w-fit", defaultClassNames.root),
+			months: cn("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
+			month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+			nav: cn("absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1", defaultClassNames.nav),
+			button_previous: cn(buttonVariants({ variant: buttonVariant }), "h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50", defaultClassNames.button_previous),
+			button_next: cn(buttonVariants({ variant: buttonVariant }), "h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50", defaultClassNames.button_next),
+			month_caption: cn("flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)", defaultClassNames.month_caption),
+			dropdowns: cn("flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium", defaultClassNames.dropdowns),
+			dropdown_root: cn("has-focus:border-ring border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] relative rounded-md border", defaultClassNames.dropdown_root),
+			dropdown: cn("bg-popover absolute inset-0 opacity-0", defaultClassNames.dropdown),
+			caption_label: cn("select-none font-medium", captionLayout === "label" ? "text-sm" : "[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5", defaultClassNames.caption_label),
+			table: "w-full border-collapse",
+			weekdays: cn("flex", defaultClassNames.weekdays),
+			weekday: cn("text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal", defaultClassNames.weekday),
+			week: cn("mt-2 flex w-full", defaultClassNames.week),
+			week_number_header: cn("w-(--cell-size) select-none", defaultClassNames.week_number_header),
+			week_number: cn("text-muted-foreground select-none text-[0.8rem]", defaultClassNames.week_number),
+			day: cn("group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md", defaultClassNames.day),
+			range_start: cn("bg-accent rounded-l-md", defaultClassNames.range_start),
+			range_middle: cn("rounded-none", defaultClassNames.range_middle),
+			range_end: cn("bg-accent rounded-r-md", defaultClassNames.range_end),
+			today: cn("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
+			outside: cn("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
+			disabled: cn("text-muted-foreground opacity-50", defaultClassNames.disabled),
+			hidden: cn("invisible", defaultClassNames.hidden),
+			...classNames
+		},
+		components: {
+			Root: ({ className, rootRef, ...props }) => {
+				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-slot": "calendar",
+					ref: rootRef,
+					className: cn(className),
+					...props
+				});
+			},
+			Chevron: ({ className, orientation, ...props }) => {
+				if (orientation === "left") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
+					className: cn("size-4", className),
+					...props
+				});
+				if (orientation === "right") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
+					className: cn("size-4", className),
+					...props
+				});
+				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, {
+					className: cn("size-4", className),
+					...props
+				});
+			},
+			DayButton: CalendarDayButton,
+			WeekNumber: ({ children, ...props }) => {
+				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+					...props,
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "flex size-(--cell-size) items-center justify-center text-center",
+						children
+					})
+				});
+			},
+			...components
+		},
+		...props
+	});
+}
+function CalendarDayButton({ className, day, modifiers, ...props }) {
+	const defaultClassNames = getDefaultClassNames();
+	const ref = import_react.useRef(null);
+	import_react.useEffect(() => {
+		if (modifiers["focused"]) ref.current?.focus();
+	}, [modifiers]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+		ref,
+		variant: "ghost",
+		size: "icon",
+		"data-day": day.date.toLocaleDateString(),
+		"data-selected-single": modifiers["selected"] && !modifiers["range_start"] && !modifiers["range_end"] && !modifiers["range_middle"],
+		"data-range-start": modifiers["range_start"],
+		"data-range-end": modifiers["range_end"],
+		"data-range-middle": modifiers["range_middle"],
+		className: cn("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square h-auto w-full min-w-(--cell-size) flex-col gap-1 font-normal leading-none data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className),
+		...props
+	});
+}
+var Popover = Root2;
+var PopoverTrigger = Trigger;
+var PopoverContent = import_react.forwardRef(({ className, align = "center", sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2, {
+	ref,
+	align,
+	sideOffset,
+	className: cn("z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--radix-popover-content-transform-origin)", className),
+	...props
+}) }));
+PopoverContent.displayName = Content2.displayName;
 var prismiq_logo_png_asset_default = {
 	version: 1,
 	asset_id: "0d88e99c-1096-488d-9c62-74988e4a3782",
@@ -3113,86 +3221,141 @@ function Metric({ label, value, note }) {
 		]
 	});
 }
+function DateSelector({ value, onChange, placeholder = "Select date", presets }) {
+	const [open, setOpen] = (0, import_react.useState)(false);
+	const parsedDate = (0, import_react.useMemo)(() => {
+		if (!value || value === "—") return void 0;
+		const d = new Date(value);
+		return isValid(d) ? d : void 0;
+	}, [value]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "relative mt-2 flex items-center",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+			className: "field pr-9 font-mono text-xs",
+			value,
+			placeholder,
+			onChange: (e) => onChange(e.target.value)
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover, {
+			open,
+			onOpenChange: setOpen,
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PopoverTrigger, {
+				asChild: true,
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					"aria-label": "Open date selector",
+					className: "absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Calendar, { className: "size-3.5" })
+				})
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(PopoverContent, {
+				className: "z-[80] w-auto p-2",
+				align: "end",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Calendar$1, {
+					mode: "single",
+					selected: parsedDate,
+					onSelect: (d) => {
+						if (d) {
+							onChange(format(d, "dd MMM yyyy"));
+							setOpen(false);
+						}
+					},
+					initialFocus: true
+				}), presets && presets.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mt-2 flex flex-wrap items-center gap-1.5 border-t border-border pt-2",
+					children: [presets.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						type: "button",
+						variant: "outline",
+						size: "sm",
+						className: "h-6 px-2 text-[10px]",
+						onClick: () => {
+							if (p.text !== void 0) onChange(p.text);
+							else if (p.days !== void 0) onChange(format(addDays(/* @__PURE__ */ new Date(), p.days), "dd MMM yyyy"));
+							setOpen(false);
+						},
+						children: p.label
+					}, p.label)), value && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						type: "button",
+						variant: "ghost",
+						size: "sm",
+						className: "ml-auto h-6 px-2 text-[10px] text-muted-foreground hover:text-destructive",
+						onClick: () => {
+							onChange("");
+							setOpen(false);
+						},
+						children: "Clear"
+					})]
+				})]
+			})]
+		})]
+	});
+}
 var lineSeq = 100;
 function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, onSave }) {
 	const [type, setType] = (0, import_react.useState)(invoice?.kind ?? initialKind);
 	const [saved, setSaved] = (0, import_react.useState)(false);
 	const [saving, setSaving] = (0, import_react.useState)(false);
-	const [discount, setDiscount] = (0, import_react.useState)(invoice?.discount ?? 1e3);
-	const [customer, setCustomer] = (0, import_react.useState)(invoice?.customer ?? "Asteria Villas LLC");
-	const [address, setAddress] = (0, import_react.useState)(invoice?.address ?? "Villa 14, Palm Jumeirah, Dubai");
-	const [trn, setTrn] = (0, import_react.useState)(invoice?.trn ?? "TRN 100512468900003");
-	const [docDate, setDocDate] = (0, import_react.useState)(invoice?.date ?? (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
-		day: "2-digit",
-		month: "short",
-		year: "numeric"
-	}));
-	const [dueDate, setDueDate] = (0, import_react.useState)(invoice?.due ?? "30 Oct 2026");
-	const [lpoNumber, setLpoNumber] = (0, import_react.useState)(invoice?.lpo ?? "LPO-NSR-2419");
-	const [paymentTerms, setPaymentTerms] = (0, import_react.useState)(invoice?.terms ?? "Net 30 days");
-	const [notes, setNotes] = (0, import_react.useState)(invoice?.notes ?? "Delivery within 4–6 weeks from approved LPO. Warranty: 12 months from delivery.");
+	const [discount, setDiscount] = (0, import_react.useState)(invoice?.discount ?? 0);
+	const [customer, setCustomer] = (0, import_react.useState)(invoice?.customer ?? "");
+	const [address, setAddress] = (0, import_react.useState)(invoice?.address ?? "");
+	const [trn, setTrn] = (0, import_react.useState)(invoice?.trn ?? "");
+	const [docDate, setDocDate] = (0, import_react.useState)(invoice?.date ?? "");
+	const [dueDate, setDueDate] = (0, import_react.useState)(invoice?.due ?? "");
+	const [lpoNumber, setLpoNumber] = (0, import_react.useState)(invoice?.lpo ?? "");
+	const [paymentTerms, setPaymentTerms] = (0, import_react.useState)(invoice?.terms ?? "");
+	const [notes, setNotes] = (0, import_react.useState)(invoice?.notes ?? "");
 	const [scope, setScope] = (0, import_react.useState)(invoice?.scope ?? "");
 	const [extraNotes, setExtraNotes] = (0, import_react.useState)(invoice?.extraNotes ?? "");
 	const [downloading, setDownloading] = (0, import_react.useState)(false);
 	const [lines, setLines] = (0, import_react.useState)(invoice?.lines && invoice.lines.length > 0 ? invoice.lines : [{
 		id: 1,
-		code: "KNX-PS640",
-		desc: "KNX Power Supply 640mA",
+		code: "",
+		desc: "",
 		unit: "NOS",
-		qty: 4,
-		price: 2450
-	}, {
-		id: 2,
-		code: "DIN-ACT-12",
-		desc: "12-channel actuator with manual override",
-		unit: "NOS",
-		qty: 8,
-		price: 3150
+		qty: 1,
+		price: 0
 	}]);
 	(0, import_react.useEffect)(() => {
 		if (invoice) {
 			setType(invoice.kind);
-			setCustomer(invoice.customer);
-			setAddress(invoice.address || "Dubai, United Arab Emirates");
-			setTrn(invoice.trn || "TRN 100512468900003");
-			setDocDate(invoice.date || (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
-				day: "2-digit",
-				month: "short",
-				year: "numeric"
-			}));
-			setDueDate(invoice.due || "—");
-			setLpoNumber(invoice.lpo || "LPO-2026");
-			setPaymentTerms(invoice.terms || "Net 30 days");
+			setCustomer(invoice.customer || "");
+			setAddress(invoice.address || "");
+			setTrn(invoice.trn || "");
+			setDocDate(invoice.date || "");
+			setDueDate(invoice.due || "");
+			setLpoNumber(invoice.lpo || "");
+			setPaymentTerms(invoice.terms || "");
 			setDiscount(invoice.discount || 0);
-			setNotes(invoice.notes || "Standard delivery and payment terms apply.");
+			setNotes(invoice.notes || "");
 			setScope(invoice.scope || "");
 			setExtraNotes(invoice.extraNotes || "");
 			if (invoice.lines && invoice.lines.length > 0) setLines(invoice.lines);
+			else setLines([{
+				id: 1,
+				code: "",
+				desc: "",
+				unit: "NOS",
+				qty: 1,
+				price: 0
+			}]);
 		} else {
 			setType(initialKind);
-			setCustomer("Asteria Villas LLC");
-			setAddress("Villa 14, Palm Jumeirah, Dubai");
-			setTrn("TRN 100512468900003");
-			setDocDate((/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
-				day: "2-digit",
-				month: "short",
-				year: "numeric"
-			}));
-			setDueDate("30 Oct 2026");
+			setCustomer("");
+			setAddress("");
+			setTrn("");
+			setDocDate("");
+			setDueDate("");
+			setLpoNumber("");
+			setPaymentTerms("");
+			setDiscount(0);
+			setNotes("");
+			setScope("");
+			setExtraNotes("");
 			setLines([{
 				id: 1,
-				code: "KNX-PS640",
-				desc: "KNX Power Supply 640mA",
+				code: "",
+				desc: "",
 				unit: "NOS",
-				qty: 4,
-				price: 2450
-			}, {
-				id: 2,
-				code: "DIN-ACT-12",
-				desc: "12-channel actuator with manual override",
-				unit: "NOS",
-				qty: 8,
-				price: 3150
+				qty: 1,
+				price: 0
 			}]);
 		}
 	}, [invoice, initialKind]);
@@ -3239,22 +3402,26 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 		try {
 			const payload = {
 				no: docNumber,
-				customer,
+				customer: customer.trim() || (type === "Purchase Order" ? "Vendor / Supplier" : "Valued Customer"),
 				kind: type,
-				date: docDate,
-				due: dueDate,
+				date: docDate.trim() || (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
+					day: "2-digit",
+					month: "short",
+					year: "numeric"
+				}),
+				due: dueDate.trim() || "—",
 				amount: priced ? net + vat : 0,
 				subtotal,
 				discount,
 				vat,
 				status: submitStatus || (invoice?.status ?? "Draft"),
-				address,
-				trn,
-				lpo: lpoNumber,
-				terms: paymentTerms,
-				notes,
-				scope: type === "Quotation" ? scope : void 0,
-				extraNotes: type === "Quotation" ? extraNotes : void 0,
+				address: address.trim(),
+				trn: trn.trim(),
+				lpo: lpoNumber.trim(),
+				terms: paymentTerms.trim(),
+				notes: notes.trim(),
+				scope: type === "Quotation" ? scope.trim() : void 0,
+				extraNotes: type === "Quotation" ? extraNotes.trim() : void 0,
 				preparedBy: user?.name || "Rizvan K",
 				lines
 			};
@@ -3275,20 +3442,24 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 				type,
 				number: docNumber,
 				logoUrl: prismiq_logo_png_asset_default.url,
-				customer,
-				address,
-				trn,
-				docDate,
-				dueDate,
-				lpo: lpoNumber,
-				terms: paymentTerms,
+				customer: customer.trim() || (type === "Purchase Order" ? "Vendor / Supplier" : "Valued Customer"),
+				address: address.trim(),
+				trn: trn.trim(),
+				docDate: docDate.trim() || (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
+					day: "2-digit",
+					month: "short",
+					year: "numeric"
+				}),
+				dueDate: dueDate.trim() || "—",
+				lpo: lpoNumber.trim(),
+				terms: paymentTerms.trim(),
 				lines,
 				priced,
 				discount,
-				notes,
+				notes: notes.trim(),
 				...type === "Quotation" ? {
-					scope,
-					extraNotes
+					scope: scope.trim(),
+					extraNotes: extraNotes.trim()
 				} : {},
 				preparedBy: user?.name || "Rizvan K"
 			});
@@ -3410,21 +3581,24 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 										className: "section-label",
-										children: type === "Purchase Order" ? "Vendor / Supplier" : "Bill to"
+										children: type === "Purchase Order" ? "Vendor / Supplier" : type === "Delivery Note" ? "Deliver to / Consignee" : type === "Quotation" ? "Client / Quotation to" : "Bill to"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 										className: "field mt-2 font-semibold",
 										value: customer,
+										placeholder: type === "Purchase Order" ? "Vendor / Supplier name (e.g. ABB Industries LLC)" : type === "Delivery Note" ? "Customer / Consignee name (e.g. Horizon Hospitality)" : type === "Quotation" ? "Client / Prospect name (e.g. Maison Eight Interiors)" : "Client / Customer name (e.g. Asteria Villas LLC)",
 										onChange: (e) => setCustomer(e.target.value)
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 										className: "field mt-2",
 										value: address,
+										placeholder: type === "Purchase Order" ? "Supplier address (e.g. Jebel Ali Free Zone, Dubai)" : type === "Delivery Note" ? "Delivery site / address (e.g. Downtown Dubai Boulevard)" : type === "Quotation" ? "Project site / client address (e.g. Al Quoz Industrial 3, Dubai)" : "Billing address (e.g. Villa 14, Palm Jumeirah, Dubai)",
 										onChange: (e) => setAddress(e.target.value)
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 										className: "field mt-2 font-mono",
 										value: trn,
+										placeholder: type === "Purchase Order" ? "Supplier TRN (e.g. 100192837400003)" : type === "Delivery Note" ? "Customer TRN (optional)" : "Tax Registration No. (e.g. 100512468900003)",
 										onChange: (e) => setTrn(e.target.value)
 									})
 								] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3433,33 +3607,98 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 											className: "section-label",
 											children: "Document date"
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-											className: "field mt-2",
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DateSelector, {
 											value: docDate,
-											onChange: (e) => setDocDate(e.target.value)
+											onChange: setDocDate,
+											placeholder: "Select document date",
+											presets: [{
+												label: "Today",
+												days: 0
+											}, {
+												label: "Yesterday",
+												days: -1
+											}]
 										})] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 											className: "section-label",
-											children: "Due date"
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-											className: "field mt-2",
+											children: type === "Delivery Note" ? "Delivery date" : type === "Quotation" ? "Valid until" : type === "Purchase Order" ? "Expected delivery" : "Due date"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DateSelector, {
 											value: dueDate,
-											onChange: (e) => setDueDate(e.target.value)
+											onChange: setDueDate,
+											placeholder: type === "Delivery Note" ? "Select delivery date" : type === "Quotation" ? "Select expiry date" : type === "Purchase Order" ? "Select expected delivery date" : "Select due date (e.g. 30 Oct 2026)",
+											presets: type === "Delivery Note" ? [
+												{
+													label: "Today",
+													days: 0
+												},
+												{
+													label: "+1 Day",
+													days: 1
+												},
+												{
+													label: "+3 Days",
+													days: 3
+												},
+												{
+													label: "+7 Days",
+													days: 7
+												}
+											] : type === "Quotation" ? [
+												{
+													label: "+7 Days",
+													days: 7
+												},
+												{
+													label: "+15 Days",
+													days: 15
+												},
+												{
+													label: "+30 Days",
+													days: 30
+												},
+												{
+													label: "+60 Days",
+													days: 60
+												}
+											] : [
+												{
+													label: "Due on receipt",
+													text: "Due on receipt"
+												},
+												{
+													label: "+15 Days",
+													days: 15
+												},
+												{
+													label: "+30 Days",
+													days: 30
+												},
+												{
+													label: "+45 Days",
+													days: 45
+												},
+												{
+													label: "+60 Days",
+													days: 60
+												}
+											]
 										})] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 											className: "section-label",
-											children: "LPO number"
+											children: type === "Purchase Order" ? "PR / Quote reference" : type === "Delivery Note" ? "LPO / DO number" : type === "Quotation" ? "Inquiry / RFP reference" : "LPO number"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 											className: "field mt-2",
 											value: lpoNumber,
+											placeholder: type === "Purchase Order" ? "e.g. PR-2026-0045" : type === "Delivery Note" ? "e.g. DO-DXB-8801 / LPO-2419" : type === "Quotation" ? "e.g. RFP-DXB-902" : "e.g. LPO-NSR-2419",
 											onChange: (e) => setLpoNumber(e.target.value)
 										})] }),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 											className: "section-label",
-											children: "Payment terms"
+											children: type === "Delivery Note" ? "Delivery terms" : "Payment terms"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 											className: "field mt-2",
 											value: paymentTerms,
+											placeholder: type === "Delivery Note" ? "e.g. Receiver sign-off on delivery" : type === "Quotation" ? "e.g. 50% advance, balance on delivery" : type === "Purchase Order" ? "e.g. Net 45 days / PDC on delivery" : "e.g. Net 30 days",
 											onChange: (e) => setPaymentTerms(e.target.value)
 										})] })
 									]
@@ -3492,18 +3731,19 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													className: "field font-mono text-primary",
 													value: l.code,
-													placeholder: "Code",
+													placeholder: "Item code (e.g. KNX-PS640)",
 													onChange: (e) => update(l.id, { code: e.target.value })
 												}) }),
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													className: "field",
 													value: l.desc,
-													placeholder: "Item description",
+													placeholder: "Description of goods or services",
 													onChange: (e) => update(l.id, { desc: e.target.value })
 												}) }),
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													className: "field w-16",
 													value: l.unit,
+													placeholder: "NOS",
 													onChange: (e) => update(l.id, { unit: e.target.value })
 												}) }),
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
@@ -3511,16 +3751,18 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 													min: 0,
 													step: 1,
 													className: "field w-20 text-right font-mono",
-													value: l.qty,
-													onChange: (e) => update(l.id, { qty: Number(e.target.value) || 0 })
+													value: l.qty === 0 ? "" : l.qty,
+													placeholder: "1",
+													onChange: (e) => update(l.id, { qty: e.target.value === "" ? 0 : Number(e.target.value) })
 												}) }),
 												priced && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													type: "number",
 													min: 0,
 													step: .01,
 													className: "field w-28 text-right font-mono",
-													value: l.price,
-													onChange: (e) => update(l.id, { price: Number(e.target.value) || 0 })
+													value: l.price === 0 ? "" : l.price,
+													placeholder: "0.00",
+													onChange: (e) => update(l.id, { price: e.target.value === "" ? 0 : Number(e.target.value) })
 												}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
 													className: "text-right font-mono font-semibold",
 													children: num(l.qty * l.price)
@@ -3563,13 +3805,13 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													className: "field mt-2 font-mono text-primary",
 													value: l.code,
-													placeholder: "Product code",
+													placeholder: "Product code (e.g. KNX-PS640)",
 													onChange: (e) => update(l.id, { code: e.target.value })
 												}),
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 													className: "field mt-2",
 													value: l.desc,
-													placeholder: "Item description",
+													placeholder: "Description of goods or services",
 													onChange: (e) => update(l.id, { desc: e.target.value })
 												}),
 												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3581,6 +3823,7 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 														}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
 															className: "field mt-1",
 															value: l.unit,
+															placeholder: "NOS",
 															onChange: (e) => update(l.id, { unit: e.target.value })
 														})] }),
 														/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
@@ -3592,8 +3835,9 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 															step: 1,
 															inputMode: "decimal",
 															className: "field mt-1 text-right font-mono",
-															value: l.qty,
-															onChange: (e) => update(l.id, { qty: Number(e.target.value) || 0 })
+															value: l.qty === 0 ? "" : l.qty,
+															placeholder: "1",
+															onChange: (e) => update(l.id, { qty: e.target.value === "" ? 0 : Number(e.target.value) })
 														})] }),
 														priced && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 															className: "section-label",
@@ -3604,8 +3848,9 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 															step: .01,
 															inputMode: "decimal",
 															className: "field mt-1 text-right font-mono",
-															value: l.price,
-															onChange: (e) => update(l.id, { price: Number(e.target.value) || 0 })
+															value: l.price === 0 ? "" : l.price,
+															placeholder: "0.00",
+															onChange: (e) => update(l.id, { price: e.target.value === "" ? 0 : Number(e.target.value) })
 														})] })
 													]
 												}),
@@ -3653,8 +3898,9 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 												min: 0,
 												step: .01,
 												className: "field w-28 text-right font-mono",
-												value: discount,
-												onChange: (e) => setDiscount(Number(e.target.value) || 0)
+												value: discount === 0 ? "" : discount,
+												placeholder: "0.00",
+												onChange: (e) => setDiscount(e.target.value === "" ? 0 : Number(e.target.value))
 											})]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -3686,6 +3932,7 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
 										className: "field mt-2 min-h-24 resize-none",
 										value: notes,
+										placeholder: type === "Delivery Note" ? "Enter delivery instructions, receiver details, vehicle or gate pass notes..." : type === "Quotation" ? "Enter payment terms, quotation validity, delivery lead time, and warranty terms..." : type === "Purchase Order" ? "Enter delivery instructions, supplier terms, receiving bay hours, and warranty..." : "Enter payment instructions, bank transfer details, or general invoice terms...",
 										onChange: (e) => setNotes(e.target.value)
 									})] }),
 									type === "Quotation" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -3693,7 +3940,7 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 										children: "Not in our scope"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
 										className: "field mt-2 min-h-24 resize-none",
-										placeholder: "e.g. Civil works, painting, and any permits not included.",
+										placeholder: "e.g. Civil works, painting, site wiring, and any municipal permits not included.",
 										value: scope,
 										onChange: (e) => setScope(e.target.value)
 									})] }),
@@ -3702,7 +3949,7 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 										children: "Additional notes"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
 										className: "field mt-2 min-h-24 resize-none",
-										placeholder: "e.g. Prices valid for 30 days.",
+										placeholder: "e.g. Prices valid for 30 days. Material subject to prior sales.",
 										value: extraNotes,
 										onChange: (e) => setExtraNotes(e.target.value)
 									})] }),

@@ -2,12 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDownLeft, ArrowUpRight, BarChart3, Bell, BookOpen, Building2,
-  Check, ChevronDown, ChevronRight, CircleDollarSign, ClipboardCheck,
+  Calendar as CalendarIcon, Check, ChevronDown, ChevronRight, CircleDollarSign, ClipboardCheck,
   FileCheck2, FileMinus2, FileText, LayoutDashboard, Menu, Package,
   Plus, Receipt, Search, Settings, ShoppingCart, Truck, Users, Wallet,
   X, Clock3, Download, Printer, Save, Send, Landmark, MoreHorizontal, LogIn, LogOut, ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Calendar as UiCalendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format, isValid, addDays } from "date-fns";
 import logoAsset from "@/assets/prismiq-logo.png.asset.json";
 import { AuthModal } from "@/components/AuthModal";
 import { LoginPage } from "@/components/LoginPage";
@@ -1076,6 +1079,98 @@ function Metric({ label, value, note }: { label: string; value: string; note: st
   );
 }
 
+function DateSelector({
+  value,
+  onChange,
+  placeholder = "Select date",
+  presets,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder?: string;
+  presets?: { label: string; days?: number; text?: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+
+  const parsedDate = useMemo(() => {
+    if (!value || value === "—") return undefined;
+    const d = new Date(value);
+    return isValid(d) ? d : undefined;
+  }, [value]);
+
+  return (
+    <div className="relative mt-2 flex items-center">
+      <input
+        className="field pr-9 font-mono text-xs"
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label="Open date selector"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <CalendarIcon className="size-3.5" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="z-[80] w-auto p-2" align="end">
+          <UiCalendar
+            mode="single"
+            selected={parsedDate}
+            onSelect={(d) => {
+              if (d) {
+                onChange(format(d, "dd MMM yyyy"));
+                setOpen(false);
+              }
+            }}
+            initialFocus
+          />
+          {presets && presets.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border pt-2">
+              {presets.map((p) => (
+                <Button
+                  key={p.label}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-6 px-2 text-[10px]"
+                  onClick={() => {
+                    if (p.text !== undefined) {
+                      onChange(p.text);
+                    } else if (p.days !== undefined) {
+                      onChange(format(addDays(new Date(), p.days), "dd MMM yyyy"));
+                    }
+                    setOpen(false);
+                  }}
+                >
+                  {p.label}
+                </Button>
+              ))}
+              {value && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="ml-auto h-6 px-2 text-[10px] text-muted-foreground hover:text-destructive"
+                  onClick={() => {
+                    onChange("");
+                    setOpen(false);
+                  }}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
 type Line = InvoiceLine;
 let lineSeq = 100;
 
@@ -1095,15 +1190,15 @@ function InvoiceEditor({
   const [type, setType] = useState<string>(invoice?.kind ?? initialKind);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [discount, setDiscount] = useState(invoice?.discount ?? 1000);
-  const [customer, setCustomer] = useState(invoice?.customer ?? "Asteria Villas LLC");
-  const [address, setAddress] = useState(invoice?.address ?? "Villa 14, Palm Jumeirah, Dubai");
-  const [trn, setTrn] = useState(invoice?.trn ?? "TRN 100512468900003");
-  const [docDate, setDocDate] = useState(invoice?.date ?? new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }));
-  const [dueDate, setDueDate] = useState(invoice?.due ?? "30 Oct 2026");
-  const [lpoNumber, setLpoNumber] = useState(invoice?.lpo ?? "LPO-NSR-2419");
-  const [paymentTerms, setPaymentTerms] = useState(invoice?.terms ?? "Net 30 days");
-  const [notes, setNotes] = useState(invoice?.notes ?? "Delivery within 4–6 weeks from approved LPO. Warranty: 12 months from delivery.");
+  const [discount, setDiscount] = useState(invoice?.discount ?? 0);
+  const [customer, setCustomer] = useState(invoice?.customer ?? "");
+  const [address, setAddress] = useState(invoice?.address ?? "");
+  const [trn, setTrn] = useState(invoice?.trn ?? "");
+  const [docDate, setDocDate] = useState(invoice?.date ?? "");
+  const [dueDate, setDueDate] = useState(invoice?.due ?? "");
+  const [lpoNumber, setLpoNumber] = useState(invoice?.lpo ?? "");
+  const [paymentTerms, setPaymentTerms] = useState(invoice?.terms ?? "");
+  const [notes, setNotes] = useState(invoice?.notes ?? "");
   const [scope, setScope] = useState(invoice?.scope ?? "");
   const [extraNotes, setExtraNotes] = useState(invoice?.extraNotes ?? "");
   const [downloading, setDownloading] = useState(false);
@@ -1111,40 +1206,44 @@ function InvoiceEditor({
   const [lines, setLines] = useState<Line[]>(
     invoice?.lines && invoice.lines.length > 0
       ? invoice.lines
-      : [
-          { id: 1, code: "KNX-PS640", desc: "KNX Power Supply 640mA", unit: "NOS", qty: 4, price: 2450 },
-          { id: 2, code: "DIN-ACT-12", desc: "12-channel actuator with manual override", unit: "NOS", qty: 8, price: 3150 },
-        ]
+      : [{ id: 1, code: "", desc: "", unit: "NOS", qty: 1, price: 0 }]
   );
 
-  // Synchronize when opening an existing invoice
+  // Synchronize when opening an existing invoice or switching initial kind
   useEffect(() => {
     if (invoice) {
       setType(invoice.kind);
-      setCustomer(invoice.customer);
-      setAddress(invoice.address || "Dubai, United Arab Emirates");
-      setTrn(invoice.trn || "TRN 100512468900003");
-      setDocDate(invoice.date || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }));
-      setDueDate(invoice.due || "—");
-      setLpoNumber(invoice.lpo || "LPO-2026");
-      setPaymentTerms(invoice.terms || "Net 30 days");
+      setCustomer(invoice.customer || "");
+      setAddress(invoice.address || "");
+      setTrn(invoice.trn || "");
+      setDocDate(invoice.date || "");
+      setDueDate(invoice.due || "");
+      setLpoNumber(invoice.lpo || "");
+      setPaymentTerms(invoice.terms || "");
       setDiscount(invoice.discount || 0);
-      setNotes(invoice.notes || "Standard delivery and payment terms apply.");
+      setNotes(invoice.notes || "");
       setScope(invoice.scope || "");
       setExtraNotes(invoice.extraNotes || "");
       if (invoice.lines && invoice.lines.length > 0) {
         setLines(invoice.lines);
+      } else {
+        setLines([{ id: 1, code: "", desc: "", unit: "NOS", qty: 1, price: 0 }]);
       }
     } else {
       setType(initialKind);
-      setCustomer("Asteria Villas LLC");
-      setAddress("Villa 14, Palm Jumeirah, Dubai");
-      setTrn("TRN 100512468900003");
-      setDocDate(new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }));
-      setDueDate("30 Oct 2026");
+      setCustomer("");
+      setAddress("");
+      setTrn("");
+      setDocDate("");
+      setDueDate("");
+      setLpoNumber("");
+      setPaymentTerms("");
+      setDiscount(0);
+      setNotes("");
+      setScope("");
+      setExtraNotes("");
       setLines([
-        { id: 1, code: "KNX-PS640", desc: "KNX Power Supply 640mA", unit: "NOS", qty: 4, price: 2450 },
-        { id: 2, code: "DIN-ACT-12", desc: "12-channel actuator with manual override", unit: "NOS", qty: 8, price: 3150 },
+        { id: 1, code: "", desc: "", unit: "NOS", qty: 1, price: 0 },
       ]);
     }
   }, [invoice, initialKind]);
@@ -1183,22 +1282,22 @@ function InvoiceEditor({
     try {
       const payload: Partial<InvoiceItem> = {
         no: docNumber,
-        customer,
+        customer: customer.trim() || (type === "Purchase Order" ? "Vendor / Supplier" : "Valued Customer"),
         kind: type,
-        date: docDate,
-        due: dueDate,
+        date: docDate.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+        due: dueDate.trim() || "—",
         amount: priced ? net + vat : 0,
         subtotal,
         discount,
         vat,
         status: submitStatus || (invoice?.status ?? "Draft"),
-        address,
-        trn,
-        lpo: lpoNumber,
-        terms: paymentTerms,
-        notes,
-        scope: type === "Quotation" ? scope : undefined,
-        extraNotes: type === "Quotation" ? extraNotes : undefined,
+        address: address.trim(),
+        trn: trn.trim(),
+        lpo: lpoNumber.trim(),
+        terms: paymentTerms.trim(),
+        notes: notes.trim(),
+        scope: type === "Quotation" ? scope.trim() : undefined,
+        extraNotes: type === "Quotation" ? extraNotes.trim() : undefined,
         preparedBy: user?.name || "Rizvan K",
         lines,
       };
@@ -1224,18 +1323,18 @@ function InvoiceEditor({
         type,
         number: docNumber,
         logoUrl: logoAsset.url,
-        customer,
-        address,
-        trn,
-        docDate,
-        dueDate,
-        lpo: lpoNumber,
-        terms: paymentTerms,
+        customer: customer.trim() || (type === "Purchase Order" ? "Vendor / Supplier" : "Valued Customer"),
+        address: address.trim(),
+        trn: trn.trim(),
+        docDate: docDate.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+        dueDate: dueDate.trim() || "—",
+        lpo: lpoNumber.trim(),
+        terms: paymentTerms.trim(),
         lines,
         priced,
         discount,
-        notes,
-        ...(type === "Quotation" ? { scope, extraNotes } : {}),
+        notes: notes.trim(),
+        ...(type === "Quotation" ? { scope: scope.trim(), extraNotes: extraNotes.trim() } : {}),
         preparedBy: user?.name || "Rizvan K",
       });
     } finally {
@@ -1315,27 +1414,159 @@ function InvoiceEditor({
 
               <div className="grid gap-5 border-b border-border p-5 md:grid-cols-2">
                 <div>
-                  <p className="section-label">{type === "Purchase Order" ? "Vendor / Supplier" : "Bill to"}</p>
-                  <input className="field mt-2 font-semibold" value={customer} onChange={(e) => setCustomer(e.target.value)} />
-                  <input className="field mt-2" value={address} onChange={(e) => setAddress(e.target.value)} />
-                  <input className="field mt-2 font-mono" value={trn} onChange={(e) => setTrn(e.target.value)} />
+                  <p className="section-label">
+                    {type === "Purchase Order"
+                      ? "Vendor / Supplier"
+                      : type === "Delivery Note"
+                      ? "Deliver to / Consignee"
+                      : type === "Quotation"
+                      ? "Client / Quotation to"
+                      : "Bill to"}
+                  </p>
+                  <input
+                    className="field mt-2 font-semibold"
+                    value={customer}
+                    placeholder={
+                      type === "Purchase Order"
+                        ? "Vendor / Supplier name (e.g. ABB Industries LLC)"
+                        : type === "Delivery Note"
+                        ? "Customer / Consignee name (e.g. Horizon Hospitality)"
+                        : type === "Quotation"
+                        ? "Client / Prospect name (e.g. Maison Eight Interiors)"
+                        : "Client / Customer name (e.g. Asteria Villas LLC)"
+                    }
+                    onChange={(e) => setCustomer(e.target.value)}
+                  />
+                  <input
+                    className="field mt-2"
+                    value={address}
+                    placeholder={
+                      type === "Purchase Order"
+                        ? "Supplier address (e.g. Jebel Ali Free Zone, Dubai)"
+                        : type === "Delivery Note"
+                        ? "Delivery site / address (e.g. Downtown Dubai Boulevard)"
+                        : type === "Quotation"
+                        ? "Project site / client address (e.g. Al Quoz Industrial 3, Dubai)"
+                        : "Billing address (e.g. Villa 14, Palm Jumeirah, Dubai)"
+                    }
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                  <input
+                    className="field mt-2 font-mono"
+                    value={trn}
+                    placeholder={
+                      type === "Purchase Order"
+                        ? "Supplier TRN (e.g. 100192837400003)"
+                        : type === "Delivery Note"
+                        ? "Customer TRN (optional)"
+                        : "Tax Registration No. (e.g. 100512468900003)"
+                    }
+                    onChange={(e) => setTrn(e.target.value)}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <label>
                     <span className="section-label">Document date</span>
-                    <input className="field mt-2" value={docDate} onChange={(e) => setDocDate(e.target.value)} />
+                    <DateSelector
+                      value={docDate}
+                      onChange={setDocDate}
+                      placeholder="Select document date"
+                      presets={[
+                        { label: "Today", days: 0 },
+                        { label: "Yesterday", days: -1 },
+                      ]}
+                    />
                   </label>
                   <label>
-                    <span className="section-label">Due date</span>
-                    <input className="field mt-2" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+                    <span className="section-label">
+                      {type === "Delivery Note"
+                        ? "Delivery date"
+                        : type === "Quotation"
+                        ? "Valid until"
+                        : type === "Purchase Order"
+                        ? "Expected delivery"
+                        : "Due date"}
+                    </span>
+                    <DateSelector
+                      value={dueDate}
+                      onChange={setDueDate}
+                      placeholder={
+                        type === "Delivery Note"
+                          ? "Select delivery date"
+                          : type === "Quotation"
+                          ? "Select expiry date"
+                          : type === "Purchase Order"
+                          ? "Select expected delivery date"
+                          : "Select due date (e.g. 30 Oct 2026)"
+                      }
+                      presets={
+                        type === "Delivery Note"
+                          ? [
+                              { label: "Today", days: 0 },
+                              { label: "+1 Day", days: 1 },
+                              { label: "+3 Days", days: 3 },
+                              { label: "+7 Days", days: 7 },
+                            ]
+                          : type === "Quotation"
+                          ? [
+                              { label: "+7 Days", days: 7 },
+                              { label: "+15 Days", days: 15 },
+                              { label: "+30 Days", days: 30 },
+                              { label: "+60 Days", days: 60 },
+                            ]
+                          : [
+                              { label: "Due on receipt", text: "Due on receipt" },
+                              { label: "+15 Days", days: 15 },
+                              { label: "+30 Days", days: 30 },
+                              { label: "+45 Days", days: 45 },
+                              { label: "+60 Days", days: 60 },
+                            ]
+                      }
+                    />
                   </label>
                   <label>
-                    <span className="section-label">LPO number</span>
-                    <input className="field mt-2" value={lpoNumber} onChange={(e) => setLpoNumber(e.target.value)} />
+                    <span className="section-label">
+                      {type === "Purchase Order"
+                        ? "PR / Quote reference"
+                        : type === "Delivery Note"
+                        ? "LPO / DO number"
+                        : type === "Quotation"
+                        ? "Inquiry / RFP reference"
+                        : "LPO number"}
+                    </span>
+                    <input
+                      className="field mt-2"
+                      value={lpoNumber}
+                      placeholder={
+                        type === "Purchase Order"
+                          ? "e.g. PR-2026-0045"
+                          : type === "Delivery Note"
+                          ? "e.g. DO-DXB-8801 / LPO-2419"
+                          : type === "Quotation"
+                          ? "e.g. RFP-DXB-902"
+                          : "e.g. LPO-NSR-2419"
+                      }
+                      onChange={(e) => setLpoNumber(e.target.value)}
+                    />
                   </label>
                   <label>
-                    <span className="section-label">Payment terms</span>
-                    <input className="field mt-2" value={paymentTerms} onChange={(e) => setPaymentTerms(e.target.value)} />
+                    <span className="section-label">
+                      {type === "Delivery Note" ? "Delivery terms" : "Payment terms"}
+                    </span>
+                    <input
+                      className="field mt-2"
+                      value={paymentTerms}
+                      placeholder={
+                        type === "Delivery Note"
+                          ? "e.g. Receiver sign-off on delivery"
+                          : type === "Quotation"
+                          ? "e.g. 50% advance, balance on delivery"
+                          : type === "Purchase Order"
+                          ? "e.g. Net 45 days / PDC on delivery"
+                          : "e.g. Net 30 days"
+                      }
+                      onChange={(e) => setPaymentTerms(e.target.value)}
+                    />
                   </label>
                 </div>
               </div>
@@ -1362,13 +1593,54 @@ function InvoiceEditor({
                     <tbody>
                       {lines.map((l) => (
                         <tr key={l.id}>
-                          <td><input className="field font-mono text-primary" value={l.code} placeholder="Code" onChange={(e) => update(l.id, { code: e.target.value })} /></td>
-                          <td><input className="field" value={l.desc} placeholder="Item description" onChange={(e) => update(l.id, { desc: e.target.value })} /></td>
-                          <td><input className="field w-16" value={l.unit} onChange={(e) => update(l.id, { unit: e.target.value })} /></td>
-                          <td><input type="number" min={0} step={1} className="field w-20 text-right font-mono" value={l.qty} onChange={(e) => update(l.id, { qty: Number(e.target.value) || 0 })} /></td>
+                          <td>
+                            <input
+                              className="field font-mono text-primary"
+                              value={l.code}
+                              placeholder="Item code (e.g. KNX-PS640)"
+                              onChange={(e) => update(l.id, { code: e.target.value })}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              className="field"
+                              value={l.desc}
+                              placeholder="Description of goods or services"
+                              onChange={(e) => update(l.id, { desc: e.target.value })}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              className="field w-16"
+                              value={l.unit}
+                              placeholder="NOS"
+                              onChange={(e) => update(l.id, { unit: e.target.value })}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              min={0}
+                              step={1}
+                              className="field w-20 text-right font-mono"
+                              value={l.qty === 0 ? "" : l.qty}
+                              placeholder="1"
+                              onChange={(e) => update(l.id, { qty: e.target.value === "" ? 0 : Number(e.target.value) })}
+                            />
+                          </td>
                           {priced && (
                             <>
-                              <td><input type="number" min={0} step={0.01} className="field w-28 text-right font-mono" value={l.price} onChange={(e) => update(l.id, { price: Number(e.target.value) || 0 })} /></td>
+                              <td>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  step={0.01}
+                                  className="field w-28 text-right font-mono"
+                                  value={l.price === 0 ? "" : l.price}
+                                  placeholder="0.00"
+                                  onChange={(e) => update(l.id, { price: e.target.value === "" ? 0 : Number(e.target.value) })}
+                                />
+                              </td>
                               <td className="text-right font-mono font-semibold">{num(l.qty * l.price)}</td>
                             </>
                           )}
@@ -1399,13 +1671,55 @@ function InvoiceEditor({
                           <X className="size-3.5" />
                         </Button>
                       </div>
-                      <input className="field mt-2 font-mono text-primary" value={l.code} placeholder="Product code" onChange={(e) => update(l.id, { code: e.target.value })} />
-                      <input className="field mt-2" value={l.desc} placeholder="Item description" onChange={(e) => update(l.id, { desc: e.target.value })} />
+                      <input
+                        className="field mt-2 font-mono text-primary"
+                        value={l.code}
+                        placeholder="Product code (e.g. KNX-PS640)"
+                        onChange={(e) => update(l.id, { code: e.target.value })}
+                      />
+                      <input
+                        className="field mt-2"
+                        value={l.desc}
+                        placeholder="Description of goods or services"
+                        onChange={(e) => update(l.id, { desc: e.target.value })}
+                      />
                       <div className="mt-2 grid grid-cols-3 gap-2">
-                        <label><span className="section-label">Unit</span><input className="field mt-1" value={l.unit} onChange={(e) => update(l.id, { unit: e.target.value })} /></label>
-                        <label><span className="section-label">Qty</span><input type="number" min={0} step={1} inputMode="decimal" className="field mt-1 text-right font-mono" value={l.qty} onChange={(e) => update(l.id, { qty: Number(e.target.value) || 0 })} /></label>
+                        <label>
+                          <span className="section-label">Unit</span>
+                          <input
+                            className="field mt-1"
+                            value={l.unit}
+                            placeholder="NOS"
+                            onChange={(e) => update(l.id, { unit: e.target.value })}
+                          />
+                        </label>
+                        <label>
+                          <span className="section-label">Qty</span>
+                          <input
+                            type="number"
+                            min={0}
+                            step={1}
+                            inputMode="decimal"
+                            className="field mt-1 text-right font-mono"
+                            value={l.qty === 0 ? "" : l.qty}
+                            placeholder="1"
+                            onChange={(e) => update(l.id, { qty: e.target.value === "" ? 0 : Number(e.target.value) })}
+                          />
+                        </label>
                         {priced && (
-                          <label><span className="section-label">Unit price</span><input type="number" min={0} step={0.01} inputMode="decimal" className="field mt-1 text-right font-mono" value={l.price} onChange={(e) => update(l.id, { price: Number(e.target.value) || 0 })} /></label>
+                          <label>
+                            <span className="section-label">Unit price</span>
+                            <input
+                              type="number"
+                              min={0}
+                              step={0.01}
+                              inputMode="decimal"
+                              className="field mt-1 text-right font-mono"
+                              value={l.price === 0 ? "" : l.price}
+                              placeholder="0.00"
+                              onChange={(e) => update(l.id, { price: e.target.value === "" ? 0 : Number(e.target.value) })}
+                            />
+                          </label>
                         )}
                       </div>
                       {priced && <p className="mt-2 text-right font-mono text-xs font-semibold">{num(l.qty * l.price)}</p>}
@@ -1428,7 +1742,15 @@ function InvoiceEditor({
                     </div>
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-muted-foreground">Special discount</span>
-                      <input type="number" min={0} step={0.01} className="field w-28 text-right font-mono" value={discount} onChange={(e) => setDiscount(Number(e.target.value) || 0)} />
+                      <input
+                        type="number"
+                        min={0}
+                        step={0.01}
+                        className="field w-28 text-right font-mono"
+                        value={discount === 0 ? "" : discount}
+                        placeholder="0.00"
+                        onChange={(e) => setDiscount(e.target.value === "" ? 0 : Number(e.target.value))}
+                      />
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">VAT 5%</span>
@@ -1445,18 +1767,41 @@ function InvoiceEditor({
               <div className="grid gap-4 border-t border-border p-5 md:grid-cols-3">
                 <div>
                   <p className="section-label">Notes &amp; terms</p>
-                  <textarea className="field mt-2 min-h-24 resize-none" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                  <textarea
+                    className="field mt-2 min-h-24 resize-none"
+                    value={notes}
+                    placeholder={
+                      type === "Delivery Note"
+                        ? "Enter delivery instructions, receiver details, vehicle or gate pass notes..."
+                        : type === "Quotation"
+                        ? "Enter payment terms, quotation validity, delivery lead time, and warranty terms..."
+                        : type === "Purchase Order"
+                        ? "Enter delivery instructions, supplier terms, receiving bay hours, and warranty..."
+                        : "Enter payment instructions, bank transfer details, or general invoice terms..."
+                    }
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
                 </div>
                 {type === "Quotation" && (
                   <div>
                     <p className="section-label">Not in our scope</p>
-                    <textarea className="field mt-2 min-h-24 resize-none" placeholder="e.g. Civil works, painting, and any permits not included." value={scope} onChange={(e) => setScope(e.target.value)} />
+                    <textarea
+                      className="field mt-2 min-h-24 resize-none"
+                      placeholder="e.g. Civil works, painting, site wiring, and any municipal permits not included."
+                      value={scope}
+                      onChange={(e) => setScope(e.target.value)}
+                    />
                   </div>
                 )}
                 {type === "Quotation" && (
                   <div>
                     <p className="section-label">Additional notes</p>
-                    <textarea className="field mt-2 min-h-24 resize-none" placeholder="e.g. Prices valid for 30 days." value={extraNotes} onChange={(e) => setExtraNotes(e.target.value)} />
+                    <textarea
+                      className="field mt-2 min-h-24 resize-none"
+                      placeholder="e.g. Prices valid for 30 days. Material subject to prior sales."
+                      value={extraNotes}
+                      onChange={(e) => setExtraNotes(e.target.value)}
+                    />
                   </div>
                 )}
                 <div className="flex items-end justify-between gap-5 md:col-span-3">

@@ -24,7 +24,11 @@ const money = (v: number) => v.toLocaleString("en-AE", { minimumFractionDigits: 
 
 async function toDataUrl(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url);
+    const fullUrl =
+      typeof window !== "undefined" && url.startsWith("/")
+        ? `${window.location.origin}${url}`
+        : url;
+    const res = await fetch(fullUrl);
     const blob = await res.blob();
     return await new Promise((resolve) => {
       const reader = new FileReader();
@@ -47,7 +51,32 @@ export async function downloadDocumentPdf(doc: PdfDocument) {
   if (doc.logoUrl) {
     const data = await toDataUrl(doc.logoUrl);
     if (data) {
-      try { pdf.addImage(data, "PNG", margin, 36, 130, 46); } catch { /* ignore unsupported image */ }
+      try {
+        let logoWidth = 71;
+        let logoHeight = 55;
+        try {
+          const imgProps = pdf.getImageProperties(data);
+          if (imgProps.width && imgProps.height) {
+            const aspect = imgProps.width / imgProps.height;
+            const maxW = 140;
+            const maxH = 55;
+            if (aspect > maxW / maxH) {
+              logoWidth = maxW;
+              logoHeight = maxW / aspect;
+            } else {
+              logoHeight = maxH;
+              logoWidth = maxH * aspect;
+            }
+          }
+        } catch {
+          // fallback to 71x55 preserving the 1272:984 aspect ratio
+        }
+
+        const logoY = 36;
+        pdf.addImage(data, "PNG", margin, logoY, logoWidth, logoHeight);
+      } catch {
+        /* ignore unsupported image */
+      }
     }
   }
 

@@ -8,7 +8,7 @@ import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { P as addDays, S as isValid, l as format } from "../_libs/date-fns.mjs";
 import { n as getDefaultClassNames, t as DayPicker } from "../_libs/react-day-picker.mjs";
 import { i as Trigger, n as Portal, r as Root2, t as Content2 } from "../_libs/@radix-ui/react-popover+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-CTvPYp2R.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-Dq_Y04j4.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -3437,7 +3437,7 @@ function InvoiceEditor({ invoice, initialKind = "Tax Invoice", user, onClose, on
 	const handleDownload = async () => {
 		setDownloading(true);
 		try {
-			const { downloadDocumentPdf } = await import("./document-pdf-DCJdTwaE.mjs");
+			const { downloadDocumentPdf } = await import("./document-pdf-D0Nxm3c-.mjs");
 			await downloadDocumentPdf({
 				type,
 				number: docNumber,

@@ -1,12 +1,13 @@
 import { o as __toESM } from "../_runtime.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/document-pdf-DCJdTwaE.js
+//#region node_modules/.nitro/vite/services/ssr/assets/document-pdf-D0Nxm3c-.js
 var money = (v) => v.toLocaleString("en-AE", {
 	minimumFractionDigits: 2,
 	maximumFractionDigits: 2
 });
 async function toDataUrl(url) {
 	try {
-		const blob = await (await fetch(url)).blob();
+		const fullUrl = typeof window !== "undefined" && url.startsWith("/") ? `${window.location.origin}${url}` : url;
+		const blob = await (await fetch(fullUrl)).blob();
 		return await new Promise((resolve) => {
 			const reader = new FileReader();
 			reader.onloadend = () => resolve(String(reader.result));
@@ -29,7 +30,24 @@ async function downloadDocumentPdf(doc) {
 	if (doc.logoUrl) {
 		const data = await toDataUrl(doc.logoUrl);
 		if (data) try {
-			pdf.addImage(data, "PNG", margin, 36, 130, 46);
+			let logoWidth = 71;
+			let logoHeight = 55;
+			try {
+				const imgProps = pdf.getImageProperties(data);
+				if (imgProps.width && imgProps.height) {
+					const aspect = imgProps.width / imgProps.height;
+					const maxW = 140;
+					const maxH = 55;
+					if (aspect > maxW / maxH) {
+						logoWidth = maxW;
+						logoHeight = maxW / aspect;
+					} else {
+						logoHeight = maxH;
+						logoWidth = maxH * aspect;
+					}
+				}
+			} catch {}
+			pdf.addImage(data, "PNG", margin, 36, logoWidth, logoHeight);
 		} catch {}
 	}
 	pdf.setFont("helvetica", "bold");

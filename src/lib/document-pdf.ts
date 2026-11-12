@@ -41,7 +41,7 @@ async function toDataUrl(url: string): Promise<string | null> {
   }
 }
 
-export async function downloadDocumentPdf(doc: PdfDocument) {
+export async function createDocumentPdf(doc: PdfDocument) {
   const [{ jsPDF }, autoTableMod] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
   const autoTable = autoTableMod.default;
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
@@ -199,5 +199,16 @@ export async function downloadDocumentPdf(doc: PdfDocument) {
   pdf.setFontSize(8);
   pdf.text("Authorized signature", pageWidth - margin - 70, y + 52, { align: "center" });
 
+  return pdf;
+}
+
+export async function downloadDocumentPdf(doc: PdfDocument) {
+  const pdf = await createDocumentPdf(doc);
   pdf.save(`${doc.number.replace(/[^\w-]+/g, "-")}-${doc.type.replace(/\s+/g, "-").toLowerCase()}.pdf`);
+}
+
+export async function getDocumentPdfBlobUrl(doc: PdfDocument): Promise<string> {
+  const pdf = await createDocumentPdf(doc);
+  const blob = pdf.output("blob");
+  return URL.createObjectURL(blob);
 }

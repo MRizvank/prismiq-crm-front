@@ -6,6 +6,7 @@ import {
   FileCheck2, FileMinus2, FileText, LayoutDashboard, Menu, Package,
   Plus, Receipt, Search, Settings, ShoppingCart, Truck, Users, Wallet,
   X, Clock3, Download, Printer, Save, Send, Landmark, MoreHorizontal, LogIn, LogOut, ShieldCheck,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar as UiCalendar } from "@/components/ui/calendar";
@@ -1202,6 +1203,16 @@ function InvoiceEditor({
   const [scope, setScope] = useState(invoice?.scope ?? "");
   const [extraNotes, setExtraNotes] = useState(invoice?.extraNotes ?? "");
   const [downloading, setDownloading] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const [lines, setLines] = useState<Line[]>(
     invoice?.lines && invoice.lines.length > 0
@@ -1342,6 +1353,39 @@ function InvoiceEditor({
     }
   };
 
+  const handlePreview = async () => {
+    setPreviewing(true);
+    try {
+      const { getDocumentPdfBlobUrl } = await import("@/lib/document-pdf");
+      const url = await getDocumentPdfBlobUrl({
+        type,
+        number: docNumber,
+        logoUrl: logoAsset.url,
+        customer: customer.trim() || (type === "Purchase Order" ? "Vendor / Supplier" : "Valued Customer"),
+        address: address.trim(),
+        trn: trn.trim(),
+        docDate: docDate.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+        dueDate: dueDate.trim() || "—",
+        lpo: lpoNumber.trim(),
+        terms: paymentTerms.trim(),
+        lines,
+        priced,
+        discount,
+        notes: notes.trim(),
+        ...(type === "Quotation" ? { scope: scope.trim(), extraNotes: extraNotes.trim() } : {}),
+        preparedBy: user?.name || "Rizvan K",
+      });
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(url);
+    } catch (err: any) {
+      alert("Error generating PDF preview: " + (err.message || err));
+    } finally {
+      setPreviewing(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[70] bg-overlay/60 p-0 backdrop-blur-sm sm:p-4">
       <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden bg-background shadow-modal sm:rounded-lg sm:border sm:border-border">
@@ -1355,11 +1399,23 @@ function InvoiceEditor({
             <p className="text-[10px] text-muted-foreground">{type} · Dubai branch · Live MongoDB Atlas</p>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" className="hidden sm:inline-flex" onClick={handleDownload} disabled={downloading}>
-              <Printer className="size-4" />Preview
+            <Button
+              variant="outline"
+              className="hidden sm:inline-flex gap-1.5"
+              onClick={handlePreview}
+              disabled={previewing || downloading}
+            >
+              <Printer className="size-4" />
+              {previewing ? "Preparing…" : "Preview"}
             </Button>
-            <Button variant="outline" onClick={handleDownload} disabled={downloading}>
-              <Download className="size-4" />{downloading ? "Preparing…" : "PDF"}
+            <Button
+              variant="outline"
+              className="gap-1.5"
+              onClick={handleDownload}
+              disabled={downloading || previewing}
+            >
+              <Download className="size-4" />
+              {downloading ? "Preparing…" : "PDF"}
             </Button>
             <Button
               variant="outline"
@@ -1819,6 +1875,60 @@ function InvoiceEditor({
           </div>
         </div>
       </div>
+
+      {/* PDF Document Preview Modal */}
+      {previewUrl && (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-2 sm:p-4 backdrop-blur-xs">
+          <div className="relative flex h-full max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg border border-border bg-background shadow-2xl">
+            {/* Preview Header */}
+            <div className="flex h-12 shrink-0 items-center justify-between border-b border-border bg-card px-4">
+              <div className="flex items-center gap-2">
+                <FileText className="size-4 text-primary" />
+                <span className="text-xs font-semibold">{docNumber}</span>
+                <span className="text-[11px] text-muted-foreground">· PDF Preview</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-1.5 text-xs"
+                  onClick={() => window.open(previewUrl, "_blank")}
+                >
+                  <ExternalLink className="size-3.5" />
+                  <span className="hidden sm:inline">Open in tab</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1.5 text-xs"
+                  onClick={handleDownload}
+                  disabled={downloading}
+                >
+                  <Download className="size-3.5" />
+                  <span className="hidden sm:inline">Download</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  onClick={() => setPreviewUrl(null)}
+                  aria-label="Close preview"
+                >
+                  <X className="size-4" />
+                </Button>
+              </div>
+            </div>
+            {/* Preview Frame */}
+            <div className="flex-1 bg-muted/30 p-1 sm:p-2">
+              <iframe
+                src={previewUrl}
+                className="size-full rounded border border-border bg-white"
+                title="PDF Document Preview"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

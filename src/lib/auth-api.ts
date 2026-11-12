@@ -29,7 +29,7 @@ export interface LoginPayload {
   password: string;
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL as string) || 'http://localhost:5000/api';
+const API_BASE = (import.meta.env.VITE_API_URL as string) || 'https://prismq-crm-backend.onrender.com/api';
 const TOKEN_KEY = 'prismiq_auth_token';
 const USER_KEY = 'prismiq_auth_user';
 

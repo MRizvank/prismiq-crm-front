@@ -34,7 +34,7 @@ export interface UpdateSystemUserPayload {
   newPassword?: string;
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL as string) || 'http://localhost:5000/api';
+const API_BASE = (import.meta.env.VITE_API_URL as string) || 'https://prismq-crm-backend.onrender.com/api';
 
 function getAuthHeaders() {
   const token = authApi.getToken();

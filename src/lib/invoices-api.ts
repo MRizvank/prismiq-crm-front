@@ -30,7 +30,7 @@ export interface InvoiceItem {
   lines?: InvoiceLine[];
 }
 
-const API_BASE = (import.meta.env.VITE_API_URL as string) || "http://localhost:5000/api";
+const API_BASE = (import.meta.env.VITE_API_URL as string) || "https://prismq-crm-backend.onrender.com/api";
 
 export const invoicesApi = {
   async getAll(params?: { kind?: string; status?: string; search?: string }): Promise<InvoiceItem[]> {

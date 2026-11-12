@@ -119,6 +119,16 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const handlePreloadError = () => {
+      window.location.reload();
+    };
+    window.addEventListener("vite:preloadError", handlePreloadError);
+    return () => {
+      window.removeEventListener("vite:preloadError", handlePreloadError);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

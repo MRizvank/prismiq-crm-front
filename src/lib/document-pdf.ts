@@ -1,3 +1,8 @@
+import { jsPDF } from "jspdf";
+import autoTablePlugin, { autoTable as autoTableNamed } from "jspdf-autotable";
+
+const autoTable = (typeof autoTablePlugin === "function" ? autoTablePlugin : autoTableNamed) as typeof autoTableNamed;
+
 export type PdfLine = { code: string; desc: string; unit: string; qty: number; price: number };
 
 export type PdfDocument = {
@@ -42,8 +47,6 @@ async function toDataUrl(url: string): Promise<string | null> {
 }
 
 export async function createDocumentPdf(doc: PdfDocument) {
-  const [{ jsPDF }, autoTableMod] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
-  const autoTable = autoTableMod.default;
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const margin = 40;

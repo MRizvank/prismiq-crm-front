@@ -18,6 +18,7 @@ import { LoginPage } from "@/components/LoginPage";
 import { UserManagementWorkspace } from "@/components/UserManagementWorkspace";
 import { authApi, type UserProfile } from "@/lib/auth-api";
 import { invoicesApi, type InvoiceItem, type InvoiceLine } from "@/lib/invoices-api";
+import { downloadDocumentPdf, getDocumentPdfBlobUrl } from "@/lib/document-pdf";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1329,7 +1330,6 @@ function InvoiceEditor({
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const { downloadDocumentPdf } = await import("@/lib/document-pdf");
       await downloadDocumentPdf({
         type,
         number: docNumber,
@@ -1348,6 +1348,8 @@ function InvoiceEditor({
         ...(type === "Quotation" ? { scope: scope.trim(), extraNotes: extraNotes.trim() } : {}),
         preparedBy: user?.name || "Rizvan K",
       });
+    } catch (err: any) {
+      alert("Error generating PDF: " + (err.message || err));
     } finally {
       setDownloading(false);
     }
@@ -1356,7 +1358,6 @@ function InvoiceEditor({
   const handlePreview = async () => {
     setPreviewing(true);
     try {
-      const { getDocumentPdfBlobUrl } = await import("@/lib/document-pdf");
       const url = await getDocumentPdfBlobUrl({
         type,
         number: docNumber,

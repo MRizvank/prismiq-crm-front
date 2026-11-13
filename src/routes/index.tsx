@@ -37,137 +37,7 @@ export const Route = createFileRoute("/")({
 type View = "Dashboard" | "Sales" | "Purchases" | "Banking" | "Journal" | "Customers" | "Reports" | "UserManagement";
 type Invoice = InvoiceItem;
 
-const defaultInvoices: InvoiceItem[] = [
-  {
-    no: "SI-DXB-2026-000123",
-    customer: "Asteria Villas LLC",
-    date: "18 Sep 2026",
-    due: "18 Oct 2026",
-    amount: 89250,
-    subtotal: 86000,
-    discount: 1000,
-    vat: 4250,
-    status: "Sent",
-    kind: "Tax Invoice",
-    address: "Villa 14, Palm Jumeirah, Dubai",
-    trn: "100512468900003",
-    terms: "Net 30 days",
-    preparedBy: "Rizvan K",
-    lines: [
-      { id: 1, code: "KNX-PS640", desc: "KNX Power Supply 640mA", unit: "NOS", qty: 4, price: 2450 },
-      { id: 2, code: "DIN-ACT-12", desc: "12-channel actuator with manual override", unit: "NOS", qty: 8, price: 3150 },
-      { id: 3, code: "SEN-OCC-360", desc: "Ceiling 360 Presence Detector", unit: "NOS", qty: 25, price: 2040 },
-    ],
-  },
-  {
-    no: "SI-DXB-2026-000122",
-    customer: "Al Noor Properties",
-    date: "16 Sep 2026",
-    due: "16 Oct 2026",
-    amount: 126840,
-    subtotal: 121800,
-    discount: 1000,
-    vat: 6040,
-    status: "Partially Paid",
-    kind: "Tax Invoice",
-    address: "Tower B, Business Bay, Dubai",
-    trn: "100426810700003",
-    terms: "Net 30 days",
-    preparedBy: "Fathima A.",
-    lines: [
-      { id: 1, code: "DALI-GW-2CH", desc: "DALI Gateway Plus Dual Channel", unit: "NOS", qty: 12, price: 4200 },
-      { id: 2, code: "TOUCH-10-IP", desc: "10-inch Smart IP Touch Panel", unit: "NOS", qty: 6, price: 12740 },
-    ],
-  },
-  {
-    no: "PT-100112291-R1",
-    customer: "Maison Eight Interiors",
-    date: "15 Sep 2026",
-    due: "22 Sep 2026",
-    amount: 244650,
-    subtotal: 235000,
-    discount: 2000,
-    vat: 11650,
-    status: "Accepted",
-    kind: "Quotation",
-    address: "Al Quoz Industrial 3, Dubai",
-    trn: "100317422000003",
-    terms: "50% advance, balance on delivery",
-    notes: "Prices valid for 30 days. Subject to site visit confirmation.",
-    scope: "Civil works, painting, and external cabling are not included.",
-    preparedBy: "Yousef Nasser",
-    lines: [
-      { id: 1, code: "ARCH-LUX-PKG", desc: "Architectural Lighting Automation Suite", unit: "LOT", qty: 1, price: 180000 },
-      { id: 2, code: "SRV-COMM-ENG", desc: "On-site Commissioning & Programming", unit: "DAYS", qty: 10, price: 5500 },
-    ],
-  },
-  {
-    no: "PT2026-PO2070",
-    customer: "ABB Industries LLC",
-    date: "12 Sep 2026",
-    due: "—",
-    amount: 48200,
-    subtotal: 46000,
-    discount: 100,
-    vat: 2300,
-    status: "Pending Approval",
-    kind: "Purchase Order",
-    address: "Jebel Ali Free Zone, Dubai",
-    trn: "100192837400003",
-    terms: "Net 45 days",
-    notes: "Supply as per standard OEM warranty terms.",
-    preparedBy: "Mahmoud R.",
-    lines: [
-      { id: 1, code: "ABB-M-BUS", desc: "ABB M-Bus Level Converter", unit: "NOS", qty: 5, price: 3800 },
-      { id: 2, code: "ABB-PWR-SUP", desc: "Regulated Auxiliary DC Supply 30V", unit: "NOS", qty: 10, price: 2700 },
-    ],
-  },
-  {
-    no: "DN-DXB-2026-000088",
-    customer: "Horizon Hospitality",
-    date: "10 Sep 2026",
-    due: "—",
-    amount: 35620,
-    subtotal: 35620,
-    discount: 0,
-    vat: 0,
-    status: "Sent",
-    kind: "Delivery Note",
-    address: "Downtown Dubai Boulevard",
-    trn: "100298744100003",
-    terms: "Immediate receipt signoff required",
-    preparedBy: "Sarah Khan",
-    lines: [
-      { id: 1, code: "VALVE-CTRL-01", desc: "FCU Modbus Actuating Valves 24V", unit: "NOS", qty: 20, price: 1781 },
-    ],
-  },
-  {
-    no: "SI-DXB-2026-000118",
-    customer: "Horizon Hospitality",
-    date: "04 Aug 2026",
-    due: "03 Sep 2026",
-    amount: 35620,
-    subtotal: 34000,
-    discount: 0,
-    vat: 1620,
-    status: "Overdue",
-    kind: "Tax Invoice",
-    address: "Downtown Dubai Boulevard",
-    trn: "100298744100003",
-    terms: "Net 30 days",
-    preparedBy: "Rizvan K",
-    lines: [
-      { id: 1, code: "VALVE-CTRL-01", desc: "FCU Modbus Actuating Valves 24V", unit: "NOS", qty: 20, price: 1700 },
-    ],
-  },
-];
-
-const baseCustomers = [
-  { code: "PTC-1048", name: "Asteria Villas LLC", trn: "100512468900003", contact: "Omar Al Mazrouei", balance: 89250, status: "Active" },
-  { code: "PTC-1041", name: "Al Noor Properties", trn: "100426810700003", contact: "Sarah Khan", balance: 74840, status: "Active" },
-  { code: "PTC-1035", name: "Maison Eight Interiors", trn: "100317422000003", contact: "Leila George", balance: 0, status: "Active" },
-  { code: "PTC-1027", name: "Horizon Hospitality", trn: "100298744100003", contact: "Yousef Nasser", balance: 35620, status: "On hold" },
-];
+const defaultInvoices: InvoiceItem[] = [];
 
 const modules = [
   { label: "Dashboard", icon: LayoutDashboard },
@@ -199,7 +69,7 @@ function AccountingApp() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(() => authApi.getStoredUser());
-  const [invoices, setInvoices] = useState<InvoiceItem[]>(defaultInvoices);
+  const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceItem | null>(null);
   const [initialEditorKind, setInitialEditorKind] = useState<string>("Tax Invoice");
   const [query, setQuery] = useState("");
@@ -228,14 +98,23 @@ function AccountingApp() {
         });
     }
 
+    const sampleNos = new Set([
+      "SI-DXB-2026-000123",
+      "SI-DXB-2026-000122",
+      "PT-100112291-R1",
+      "PT2026-PO2070",
+      "DN-DXB-2026-000088",
+      "SI-DXB-2026-000118",
+    ]);
+
     invoicesApi.getAll()
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setInvoices(data);
-        }
+        const cleaned = Array.isArray(data) ? data.filter((i) => !sampleNos.has(i.no)) : [];
+        setInvoices(cleaned);
       })
       .catch((err) => {
-        console.warn("Could not connect to MongoDB Atlas for invoices, using default items:", err);
+        console.warn("Could not connect to MongoDB Atlas for invoices:", err);
+        setInvoices([]);
       });
   }, []);
 
@@ -577,7 +456,7 @@ function Dashboard({
     const total = openInvoices.reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
     if (total === 0) {
       return [
-        { label: "0–30", value: "0.00", pct: 100 },
+        { label: "0–30", value: "0.00", pct: 0 },
         { label: "31–60", value: "0.00", pct: 0 },
         { label: "61–90", value: "0.00", pct: 0 },
         { label: "90+", value: "0.00", pct: 0 },
@@ -588,10 +467,10 @@ function Dashboard({
     const bucket30 = openInvoices.filter((i) => i.status === "Sent").reduce((s, i) => s + (i.amount || 0), 0);
     const remainder = Math.max(total - (bucket90 + bucket60 + bucket30), 0);
 
-    const b0 = bucket30 || total * 0.45;
-    const b1 = bucket60 || total * 0.25;
-    const b2 = remainder || total * 0.18;
-    const b3 = bucket90 || total * 0.12;
+    const b0 = bucket30;
+    const b1 = bucket60;
+    const b2 = remainder;
+    const b3 = bucket90;
 
     return [
       { label: "0–30", value: money(b0), pct: Math.min(100, Math.round((b0 / total) * 100)) },
@@ -852,18 +731,27 @@ function DocumentWorkspace({
 }
 
 function CustomerWorkspace({ invoices, query, setQuery }: { invoices: InvoiceItem[]; query: string; setQuery: (v: string) => void }) {
-  // Real dynamically computed balances from actual invoices
+  // Dynamically derive customers from real saved invoices in Atlas
   const customerList = useMemo(() => {
-    return baseCustomers.map((c) => {
-      const openInvs = invoices.filter(
-        (i) => i.customer?.toLowerCase() === c.name.toLowerCase() && i.kind === "Tax Invoice" && i.status !== "Paid"
-      );
-      const computedBalance = openInvs.reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
-      return {
-        ...c,
-        balance: computedBalance > 0 ? computedBalance : c.balance,
-      };
-    });
+    const map = new Map<string, { code: string; name: string; trn: string; contact: string; balance: number; status: string }>();
+    for (const inv of invoices) {
+      if (!inv.customer) continue;
+      const key = inv.customer.trim().toLowerCase();
+      if (!map.has(key)) {
+        map.set(key, {
+          name: inv.customer.trim(),
+          code: `PTC-${(map.size + 1001).toString()}`,
+          trn: inv.trn || "—",
+          contact: inv.preparedBy || "Representative",
+          balance: 0,
+          status: "Active",
+        });
+      }
+      if (inv.kind === "Tax Invoice" && inv.status !== "Paid") {
+        map.get(key)!.balance += Number(inv.amount) || 0;
+      }
+    }
+    return Array.from(map.values());
   }, [invoices]);
 
   const rows = customerList.filter(c => `${c.name} ${c.code} ${c.contact}`.toLowerCase().includes(query.toLowerCase()));
@@ -881,7 +769,7 @@ function CustomerWorkspace({ invoices, query, setQuery }: { invoices: InvoiceIte
       <div className="grid gap-3 sm:grid-cols-3">
         <Metric label="Active customers" value={`${rows.length}`} note="Live UAE accounts" />
         <Metric label="Total balance due" value={`AED ${money(totalBalanceDue)}`} note="Calculated from open invoices" />
-        <Metric label="Average collection" value="32 days" note="Dubai corporate benchmark" />
+        <Metric label="Average collection" value="—" note="Dubai corporate benchmark" />
       </div>
       <section className="glass-panel overflow-hidden">
         <div className="border-b border-border p-3">
@@ -915,6 +803,15 @@ function CustomerWorkspace({ invoices, query, setQuery }: { invoices: InvoiceIte
               ))}
             </tbody>
           </table>
+          {rows.length === 0 && (
+            <div className="p-10 text-center text-xs text-muted-foreground">
+              No customers found. Customers will automatically appear here as new invoices and quotations are issued.
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-between border-t border-border px-4 py-3 text-[10px] text-muted-foreground">
+          <span>{rows.length} accounts found</span>
+          <span className="font-mono">Live synchronization with MongoDB Atlas</span>
         </div>
       </section>
     </div>
@@ -971,13 +868,16 @@ function JournalWorkspace({ invoices }: { invoices: InvoiceItem[] }) {
     return invoices.filter((i) => i.kind === "Tax Invoice").reduce((s, i) => s + (i.vat || 0), 0);
   }, [invoices]);
 
-  const entries: string[][] = [
-    ["JV-DXB-2026-000101", "Sales Revenue Accrual", "Auto-posted from confirmed Tax Invoices", `AED ${money(totalSales)}`],
-    ["JV-DXB-2026-000102", "Output VAT 5% Provision", "UAE FTA Tax Liability Accrual", `AED ${money(totalVat)}`],
-    ["JV-DXB-2026-000034", "Depreciation — September", "Posted by Fathima A.", "AED 18,450.00"],
-    ["JV-DXB-2026-000033", "Prepaid insurance adjustment", "Approved by Mahmoud R.", "AED 8,200.00"],
-    ["JV-DXB-2026-000032", "Inter-branch allocation", "Draft · Dubai HQ", "AED 24,800.00"],
-  ];
+  const entries: string[][] = useMemo(() => {
+    const list: string[][] = [];
+    if (totalSales > 0) {
+      list.push(["JV-DXB-2026-000101", "Sales Revenue Accrual", "Auto-posted from confirmed Tax Invoices", `AED ${money(totalSales)}`]);
+    }
+    if (totalVat > 0) {
+      list.push(["JV-DXB-2026-000102", "Output VAT 5% Provision", "UAE FTA Tax Liability Accrual", `AED ${money(totalVat)}`]);
+    }
+    return list;
+  }, [totalSales, totalVat]);
 
   return (
     <SimpleWorkspace
@@ -1001,20 +901,26 @@ function SimpleWorkspace({ title, subtitle, icon: Icon, items }: { title: string
       </div>
       <section className="glass-panel overflow-hidden">
         <PanelHeader title="Recent entries (Live Atlas Data)" meta={`${items.length} records`} />
-        <div className="divide-y divide-border">
-          {items.map(([id, party, note, amount]) => (
-            <div className="flex items-center gap-3 p-4" key={id}>
-              <span className="grid size-9 place-items-center rounded-md bg-primary-soft text-primary"><Icon className="size-4" /></span>
-              <div>
-                <p className="font-mono text-[11px] font-semibold text-primary">{id}</p>
-                <p className="text-xs font-semibold">{party}</p>
-                <p className="text-[10px] text-muted-foreground">{note}</p>
+        {items.length === 0 ? (
+          <div className="p-10 text-center text-xs text-muted-foreground">
+            No entries recorded yet. Transactions will appear here as invoices and payments are created.
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {items.map(([id, party, note, amount]) => (
+              <div className="flex items-center gap-3 p-4" key={id}>
+                <span className="grid size-9 place-items-center rounded-md bg-primary-soft text-primary"><Icon className="size-4" /></span>
+                <div>
+                  <p className="font-mono text-[11px] font-semibold text-primary">{id}</p>
+                  <p className="text-xs font-semibold">{party}</p>
+                  <p className="text-[10px] text-muted-foreground">{note}</p>
+                </div>
+                <p className="ml-auto font-mono text-xs font-semibold">{amount}</p>
+                <Button variant="ghost" size="icon"><ChevronRight className="size-4" /></Button>
               </div>
-              <p className="ml-auto font-mono text-xs font-semibold">{amount}</p>
-              <Button variant="ghost" size="icon"><ChevronRight className="size-4" /></Button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
